@@ -1,0 +1,389 @@
+# a) Convert the given text to speech.  (pip install gtts , pip install playsound)
+
+# text to speech 
+# pip install gtts 
+# pip install playsound 
+from playsound import playsound
+from gtts import gTTS 
+mytext = "Welcome to Natural Language programming" 
+language = "en" 
+myobj = gTTS(text=mytext, lang=language, slow=False) 
+myobj.save("myfile.mp3") 
+playsound("myfile.mp3") 
+
+
+# b) Convert audio file Speech to Text. (pip install SpeechRecognition pydub)
+import speech_recognition as sr 
+filename = "male.wav" 
+ 
+r = sr.Recognizer() 
+with sr.AudioFile(filename) as source: 
+audio_data = r.record(source) 
+text = r.recognize_google(audio_data) 
+print(text) 
+  
+
+# /////////////////////////////////////////////////////////////////////////////////////////////////Practical No. 2:
+
+(pip install nltk)
+# a. Study of Brown Corpus with various methods like fields, raw, words, sents
+# ,categories. 
+
+import nltk 
+from nltk.corpus import brown 
+print ('File ids of brown corpus\n',brown.fileids())
+ca01 = brown.words('ca01') 
+print('\nca01 has following words:\n',ca01)
+print('\nca01 has',len(ca01),'words')
+
+print ('\n\nCategories or file in brown corpus:\n')
+print (brown.categories())
+print ('\n\nStatistics for each text:\n') 
+print ('AvgWordLen\tAvgSentenceLen\tno.ofTimesEachWordAppearsOnAvg\t\tFileName')
+for fileid in brown.fileids(): 
+    num_chars = len(brown.raw(fileid))
+    num_words = len(brown.words(fileid))
+    num_sents = len(brown.sents(fileid))
+    num_vocab = len(set([w.lower() for w in brown.words(fileid)]))
+    print(int(num_chars / num_words), '\t\t\t', int(num_words / num_sents), '\t\t\t',
+          int(num_words / num_vocab), '\t\t\t', fileid)
+
+
+# b.  Create and use your own corpora (plaintext, categorical)
+
+import nltk 
+from nltk.corpus import PlaintextCorpusReader 
+corpus_root = 'D:/2020/NLP/Practical/uni' 
+filelist = PlaintextCorpusReader(corpus_root, '.*') 
+print ('\n File list: \n') 
+print (filelist.fileids()) 
+print (filelist.root)
+print ('\n\nStatistics for each text:\n')
+
+print('AvgWordLen\tAvgSentenceLen\tno.ofTimesEachWordAppearsOnAvg\tFileName')
+for fileid in filelist.fileids(): 
+    num_chars = len(filelist.raw(fileid))
+    num_words = len(filelist.words(fileid))
+    num_sents = len(filelist.sents(fileid))
+    num_vocab = len(set([w.lower() for w in filelist.words(fileid)]))
+    print (int(num_chars/num_words),'\t\t\t', int(num_words/num_sents),'\t\t\t',
+    int(num_words/num_vocab),'\t\t', fileid)
+
+# c. Study of tagged corpora with methods like tagged_sents, tagged_words.
+
+import nltk 
+from nltk import tokenize 
+nltk.download('punkt') 
+nltk.download('words') 
+para = "Hello! My name is Beena Kapadia. Today you'll be learning NLTK." 
+sents = tokenize.sent_tokenize(para) 
+print("\nsentence tokenization\n===================\n",sents) 
+print("\nword tokenization\n===================\n")
+for index in range(len(sents)): 
+    words = tokenize.word_tokenize(sents[index])
+    print(words)
+
+# f. Map Words to Properties Using Python Dictionaries
+
+thisdict = {
+    "brand": "Ford",
+    "model": "Mustang",
+    "year": 1964
+    }
+
+print(thisdict) 
+print(thisdict["brand"]) 
+print(len(thisdict)) 
+print(type(thisdict)) 
+
+  
+
+# ///////////////////////////////////////////////////////////////////////////////////////////////////////practical 3
+
+# i) DefaultTagger
+
+import nltk
+nltk.download("treebank")
+from nltk.tag import DefaultTagger 
+exptagger = DefaultTagger('NN') 
+from nltk.corpus import treebank 
+testsentences = treebank.tagged_sents() [1000:] 
+print(exptagger.evaluate (testsentences))
+print(exptagger.tag_sents([['Hi', ','], ['How', 'are', 'you', '?']]))
+
+
+# ii) UnigramTagger
+
+
+from nltk.tag import UnigramTagger 
+from nltk.corpus import treebank
+
+train_sents = treebank.tagged_sents()[:10]
+tagger = UnigramTagger(train_sents)
+print(treebank.sents()[0])
+print('\n',tagger.tag(treebank.sents()[0])) 
+tagger.tag(treebank.sents()[0])
+tagger = UnigramTagger(model ={'Pierre': 'NN'})
+print('\n',tagger.tag(treebank.sents()[0]))
+
+
+# ///////////////////////////////////////////////////////////////////////////////////////////////////////practical 4
+
+# a. Study of Wordnet Dictionary with methods as synsets, definitions, examples,
+# antonyms
+
+import nltk
+nltk.download('wordnet')
+from nltk.corpus import wordnet 
+print(wordnet.synsets("computer")) 
+# definition and example of the word ‘computer’
+print(wordnet.synset("computer.n.01").definition())
+#examples 
+print("Examples:", wordnet.synset("computer.n.01").examples()) 
+#get Antonyms 
+print(wordnet.lemma('buy.v.01.buy').antonyms()) 
+
+
+
+# b. Write a program using python to find synonym and antonym of word "active"
+# using Wordnet.
+
+from nltk.corpus import wordnet 
+print( wordnet.synsets("active")) 
+print(wordnet.lemma('active.a.01.active').antonyms()) 
+
+
+# c. Compare two nouns
+
+import nltk 
+from nltk.corpus import wordnet 
+syn1 = wordnet.synsets('football') 
+syn2 = wordnet.synsets('soccer')
+for s1 in syn1: 
+    for s2 in syn2:
+        print("Path similarity of: ")
+        print(s1, '(', s1.pos(), ')', '[', s1.definition(), ']')
+        print(s2, '(', s2.pos(), ')', '[', s2.definition(), ']')
+        print("   is", s1.path_similarity(s2))
+
+
+
+# ///////////////////////////////////////////////////////////////////////////////////////////////////////practical 5
+
+
+# a. Tokenization using Python’s split() function
+
+text = """ This tool is an a beta stage. Alexa developers can use Get Metrics API to 
+seamlessly analyse metric. It also supports custom skill model, prebuilt Flash Briefing 
+model, and the Smart Home Skill API. You can use this tool for creation of monitors, 
+alarms, and dashboards that spotlight changes. The release of these three tools will 
+enable developers to create visual rich skills for Alexa devices with screens. Amazon 
+describes these tools as the collection of tech and tools for creating visually rich and 
+interactive voice experiences.  """ 
+data = text.split('.') 
+for i in data: 
+    print (i)
+
+# b. Tokenization using Regular Expressions (RegEx)
+
+import nltk 
+from nltk.tokenize import RegexpTokenizer
+# Create a reference variable for Class RegexpTokenizer 
+tk = RegexpTokenizer('\s+', gaps = True) 
+# Create a string input 
+str = "I love to study Natural Language Processing in Python" 
+# Use tokenize method 
+tokens = tk.tokenize(str) 
+print(tokens)
+
+# c. Tokenization using NLTK
+
+import nltk 
+from nltk.tokenize import word_tokenize 
+# Create a string input 
+str = "I love to study Natural Language Processing in Python" 
+# Use tokenize method 
+print(word_tokenize(str))
+
+
+# d. Tokenization using the spaCy library (pip install spacy)
+
+import spacy 
+nlp = spacy.blank("en") 
+# Create a string input 
+str = "I love to study Natural Language Processing in Python" 
+# Create an instance of document; 
+# doc object is a container for a sequence of Token objects. 
+doc = nlp(str) 
+# Read the words; Print the words 
+# 
+words = [word.text for word in doc] 
+print(words) 
+
+# e. Tokenization using Keras (pip install keras , pip install tensorflow)
+
+#pip install keras 
+#pip install tensorflow 
+import keras 
+from keras.preprocessing.text import text_to_word_sequence 
+# Create a string input
+str = "I love to study Natural Language Processing in Python" 
+# tokenizing the text 
+tokens = text_to_word_sequence(str) 
+print(tokens)
+
+# f. Tokenization using Gensim
+#pip install gensim 
+from gensim.utils import tokenize 
+# Create a string input 
+str = "I love to study Natural Language Processing in Python" 
+# tokenizing the text 
+list(tokenize(str)) 
+
+
+# ////////////////////////////////////////////////////////////////////////////////////////////////////////practical 6
+
+
+# a) Named Entity recognition using user defined text.
+
+# !pip install -U spacy
+# !python -m spacy download en_core_web_sm
+import spacy 
+# Load English tokenizer, tagger, parser and NER 
+nlp = spacy.load("en_core_web_sm") 
+# Process whole documents 
+text = ("When Sebastian Thrun started working on self-driving cars at " 
+"Google in 2007, few people outside of the company took him " 
+"seriously.")
+doc = nlp(text) 
+# Analyse syntax 
+print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks]) 
+print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"]) 
+
+
+# c) Named Entity recognition with diagram using NLTK corpus – treebank.
+import nltk
+nltk.download('treebank') 
+from nltk.corpus import treebank_chunk 
+treebank_chunk.tagged_sents()[0] 
+treebank_chunk.chunked_sents()[0] 
+treebank_chunk.chunked_sents()[0].draw() 
+
+# //////////////////////////////////////////////////////////////////////////////////////////////////////practical 7
+
+# a) Define grammar using nltk. Analyze a sentence using the same.
+
+import nltk 
+from nltk import tokenize 
+grammar1 = nltk.CFG.fromstring(""" 
+S -> VP 
+VP -> VP NP 
+NP -> Det  NP 
+Det -> 'that' 
+NP -> singular Noun 
+NP -> 'flight' 
+VP -> 'Book'   
+""") 
+sentence = "Book that flight"
+
+for index in range(len(sentence)): 
+    all_tokens = tokenize.word_tokenize(sentence)
+print(all_tokens) 
+parser = nltk.ChartParser(grammar1) 
+for tree in parser.parse(all_tokens): 
+    print(tree)
+    tree.draw()
+
+
+# b) Implementation of Deductive Chart Parsing using context free grammar and a given sentence.
+
+import nltk 
+from nltk import tokenize 
+grammar1 = nltk.CFG.fromstring(""" 
+S -> NP VP 
+PP -> P NP 
+NP -> Det N | Det N PP | 'I' 
+VP -> V NP | VP PP 
+Det -> 'a' | 'my' 
+N -> 'bird' | 'balcony' 
+V -> 'saw' 
+P -> 'in' 
+""") 
+sentence = "I saw a bird in my balcony" 
+for index in range(len(sentence)): 
+    all_tokens = tokenize.word_tokenize(sentence)
+print(all_tokens) 
+# all_tokens = ['I', 'saw', 'a', 'bird', 'in', 'my', 'balcony'] 
+parser = nltk.ChartParser(grammar1) 
+for tree in parser.parse(all_tokens): 
+    print(tree)
+    tree.draw()
+
+
+
+# ///////////////////////////////////////////////////////////////////////////////////////////////////////practical 8
+
+
+# Study PorterStemmer, LancasterStemmer, RegexpStemmer, SnowballStemmer Study WordNetLemmatizer
+
+# PorterStemmer 
+import nltk
+nltk.download('wordnet')
+word = "running"
+print("porterstemmer")
+from nltk.stem import PorterStemmer 
+word_stemmer = PorterStemmer() 
+print(word_stemmer.stem(word))
+print("--------------------------------------------")
+#LancasterStemmer  
+import nltk 
+from nltk.stem import LancasterStemmer 
+Lanc_stemmer = LancasterStemmer()
+print("lancasterstemmer")
+print(Lanc_stemmer.stem(word))
+print("--------------------------------------------")
+#RegexpStemmer  
+import nltk 
+from nltk.stem import RegexpStemmer 
+Reg_stemmer = RegexpStemmer('ing$|s$|e$|able$', min=4)
+print("regexpstemmer")
+print(Reg_stemmer.stem(word))
+print("--------------------------------------------")
+#SnowballStemmer  
+import nltk 
+from nltk.stem import SnowballStemmer 
+english_stemmer = SnowballStemmer('english')
+print("snowballstammer")
+print(english_stemmer.stem (word))
+print("--------------------------------------------")
+#WordNetLemmatizer 
+from nltk.stem import WordNetLemmatizer 
+lemmatizer = WordNetLemmatizer()
+print("word :\tlemma")   
+print("rocks :", lemmatizer.lemmatize("rocks")) 
+print("corpora :", lemmatizer.lemmatize("corpora")) 
+# a denotes adjective in "pos" 
+print("better :", lemmatizer.lemmatize("better", pos ="a"))
+
+# /////////////////////////////////////////////////////////////////////////////////////////////////////////practical 9
+
+
+# finite autometa
+
+def FA(s):
+    if len(s) < 3:
+        return "rejected"
+    if s[0] == "1":
+        if s[1] == "0":
+            if s[2] == "1":
+                for i in range(3, len(s)):
+                    if s[i] != "1":
+                        return "rejected"
+                return "accepted"
+            return "rejected"
+        return "rejected"
+    return "rejected"
+
+inputs = ['1', '10101', '101', '10111', '01010', '100', '', '10111101', '1011111']
+for i in inputs:
+    print(i, FA(i))
